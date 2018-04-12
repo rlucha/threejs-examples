@@ -4,6 +4,7 @@ import {
   Geometry,
   Face3,
   Mesh,
+  ShapeUtils,
   MeshNormalMaterial
 } from 'three'
 
@@ -16,7 +17,11 @@ const scene = createScene()
 
 var geometry = new Geometry()
 geometry.vertices.push(new Vector3(0, 0, 0))
+geometry.vertices.push(new Vector3(0, 100, 0))
 geometry.vertices.push(new Vector3(100, 0, 0))
+
+// You cannot have two same vertices or the geom triangulation won't work
+geometry.vertices.push(new Vector3(0, 0, 100))
 geometry.vertices.push(new Vector3(100, 100, 0))
 
 // for (var i = 0; i < 10000; i++) {
@@ -26,10 +31,11 @@ geometry.vertices.push(new Vector3(100, 100, 0))
 //   vertex.z = Math.random() * 1000 - 500
 //   geometry.vertices.push(vertex)
 // }
+const triangles = ShapeUtils.triangulateShape(geometry.vertices, [])
 
-
-geometry.faces.push(new Face3(0, 1, 2))
-
+triangles.forEach(t => {
+  geometry.faces.push(new Face3(t[0], t[1], t[2]))
+})
 // geometry.computeFaceNormals()
 // We need to compute the vertex normals for MeshNormalMaterial to work
 geometry.computeVertexNormals()
