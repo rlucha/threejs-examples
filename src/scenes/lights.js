@@ -14,13 +14,13 @@ import {
   MeshPhongMaterial
 } from 'three'
 
-import {createScene} from '../scene_setup'
+import {createScene, addAnimationCB} from '../scene_setup'
 
 export default () => {
 // Scene
   const scene = createScene()
   const color = 0xffffff
-  const intensity = 1.5
+  const intensity = 1
 
   var pointLight = new PointLight(color, intensity, 50)
   pointLight.castShadow = true
@@ -48,6 +48,14 @@ export default () => {
   mesh.receiveShadow = true
   scene.add(mesh)
   scene.add(pointLight)
+
+  addAnimationCB(function (cTime) {
+    const a = (Math.cos(cTime * 0.001) * 10) + 10
+    console.log(cTime * 0.01)
+
+    console.log(a, pointLight.position)
+    pointLight.position.set(0, a, 0)
+  })
 // TO read
 // What is a vertex normal and what relation has with face?
 }

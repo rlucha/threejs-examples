@@ -8,6 +8,10 @@ import {
 
 import OrbitControls from 'orbit-controls-es6'
 
+const animationObservers = []
+
+export const addAnimationCB = cb => animationObservers.push(cb)
+
 const createScene = () => {
   const scene = new Scene()
 
@@ -42,10 +46,14 @@ const createScene = () => {
   // Attach canvas canvas
   document.body.appendChild(renderer.domElement)
 
+  const timeStamp = Date.now()
   function animate () {
+    var cTime = Date.now() - timeStamp
     window.requestAnimationFrame(animate)
     // controls.update();
     renderer.render(scene, camera)
+
+    animationObservers.forEach(cb => cb(cTime))
   }
 
   animate()
