@@ -35,6 +35,20 @@ const createLight = () => {
   return pointLight
 }
 
+const createCube = () => {
+  var cubeG = new BoxGeometry(2, 2, 2)
+  var cubeM = new MeshPhongMaterial({
+    color: 0x333333,
+    shininess: 10,
+    specular: 0xff0000
+  })
+  var cubeMesh = new Mesh(cubeG, cubeM)
+  cubeMesh.castShadow = true
+
+  cubeMesh.position.set(Math.random() * 20 - 10, Math.random() * 20, Math.random() * 20 - 10)
+  return cubeMesh
+}
+
 export default () => {
 // Scene
   const scene = createScene()
@@ -52,18 +66,12 @@ export default () => {
     side: BackSide
   })
 
-  var cubeG = new BoxGeometry(2, 2, 2)
-  var cubeM = new MeshPhongMaterial({
-    color: 0x330000,
-    shininess: 10,
-    specular: 0x111111
-  })
-  var cubeMesh = new Mesh(cubeG, cubeM)
-  cubeMesh.castShadow = true
+  // Do random cubes
+  for (let i = 0; i < 10; i++) {
+    scene.add(createCube())
+  }
 
-  cubeMesh.position.set(-10, -4, 0)
-
-  scene.add(cubeMesh)
+  scene.add(createCube())
 
   var room = new Mesh(geometry2, material2)
   room.position.y = 10
@@ -75,7 +83,7 @@ export default () => {
     const amplitude = 10
     const a = (Math.cos(cTime * speed) * amplitude) + 10
     pl.position.set(0, a, 0)
-    p2.position.set((a * 0.5), 0, a*0.5)
+    p2.position.set((a * 0.5), 0, a * 0.5)
   })
 // TO read
 // What is a vertex normal and what relation has with face?
