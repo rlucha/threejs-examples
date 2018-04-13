@@ -14,11 +14,13 @@ export const addAnimationCB = cb => animationObservers.push(cb)
 
 const createScene = () => {
   const scene = new Scene()
+  window.scene = scene
 
   // Renderer
   const renderer = new WebGLRenderer({ antialias: true })
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.shadowMapEnabled = true
 
   const ambientLight = new AmbientLight(0x404040)
   scene.add(ambientLight)
@@ -29,8 +31,11 @@ const createScene = () => {
 
   // Camera
   const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000)
-  camera.position.set(200, 200, 400)
+  camera.position.set(5, 12, 22)
   camera.lookAt(0, 0, 0)
+
+  window.camera = camera
+  // var vector = camera.position.clone();
 
   // Controls
   // const controls = new OrbitControls(camera)
