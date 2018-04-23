@@ -2,6 +2,9 @@
 
 // facesScene()
 
-import lights from './scenes/lights'
+// import lights from './scenes/lights'
+// lights()
 
-lights()
+import { loop } from './decouple_inputs'
+
+loop()
