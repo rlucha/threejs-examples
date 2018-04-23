@@ -1,13 +1,18 @@
 import { curry, forEachObjIndexed } from 'ramda'
 
 //  State ----------------
+const panelContainer = document.createElement('div')
+const element01Container = document.createElement('div')
 const timeHooks = {}
-window.timeHooks = timeHooks
+const behaviours = {}
+window.behaviours = behaviours
 // -----------------------
 
 // State Utils -----------
 const addTimeHook = (id, fn) => { timeHooks[id] = {value: 0, fn} }
-// const addElementBehaviour = (fn, thList) => timeHooks.push(fn)
+const addBehaviour = (id, thID, fn) => {
+  behaviours[id] = () => fn(timeHooks[thID].value)
+}
 // -----------------------
 
 // loop gets a timestamp passed as requestAnimationFrame default param
@@ -17,6 +22,9 @@ const loop = (t = 0) => {
     obj[key]['value'] = th.fn(t)
   }, timeHooks)
 
+  forEachObjIndexed((bh, key, obj) => bh(), behaviours)
+
+  panelContainer.innerHTML = timeHooksPanel(timeHooks)
   window.requestAnimationFrame(loop)
 }
 
@@ -28,6 +36,21 @@ const COSLoop = t => Math.cos(t)
 const movGenerator = (speed, tFn, t) => {
   return tFn(tSpeed(t, speed))
 }
+
+const timeHooksPanel = timeHooks => `
+  <div>
+    <strong>TD1</strong>
+    <span>${timeHooks.td1.value}</span>
+    <hr/>
+  </div>`
+
+const element01 = val => `
+<div>
+  <div style="position: relative; left: ${val}px">
+    <strong>element01: ${val}px</strong>
+  </div>
+  <hr/>
+</div>`
 
 // movBehaviour1 maps from a timehookvalue to a element property
 // const movBehaviour1 = (el, timehookID_ref) => {
@@ -41,12 +64,20 @@ const movGenerator = (speed, tFn, t) => {
 // }
 
 // Setup ------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.append(panelContainer)
+  document.body.append(element01Container)
+})
 
 // create timeBoundFunctions with unbound t
 const td1 = curry(movGenerator)(0.001, COSLoop)
 
 // timehook are functions from t -> any
 addTimeHook('td1', td1)
+
+addBehaviour('bh1', 'td1', val => {
+  element01Container.innerHTML = element01(val * 100)
+})
 
 // addElementBehaviour()
 // -----------------------
